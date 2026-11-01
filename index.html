@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>새싹 · 할 일과 루틴</title>
+<meta name="theme-color" content="#f2f7f1" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#151a17" media="(prefers-color-scheme: dark)">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="새싹">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f2f7f1; --bg2:#e7f1e6; --card:#ffffff; --ink:#1e2a23; --sub:#6f7d74; --line:#e1ebe0;
+  --leaf:#3f8a5f; --leaf2:#7cc39a; --mint:#d5efdf; --sky:#d6ecef;
+  --hl:#d8f27a; --hl-soft:rgba(206,240,120,.6); --warn:#cf5a3a;
+  --m:#f4cf72; --a:#86cfa5; --e:#9db1ea; --any:#cfdccf; --pot:#e7d3bd; --pot2:#d6bc9f;
+  --shadow:0 1px 2px rgba(30,60,40,.05),0 6px 18px rgba(30,60,40,.06);
+}
+@media (prefers-color-scheme:dark){
+  :root{--bg:#151a17;--bg2:#1b231e;--card:#1f2722;--ink:#e8efe9;--sub:#93a198;--line:#2c3630;
+  --leaf:#8fd3a9;--leaf2:#5aa47a;--mint:#24392d;--sky:#21363a;--hl:#b9d64a;--hl-soft:rgba(185,214,74,.3);
+  --warn:#f08b6a;--any:#3c4a41;--pot:#6b5a49;--pot2:#5a4a3b;--shadow:none}
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans KR",system-ui,-apple-system,sans-serif;font-size:16px;overscroll-behavior-y:none}
+body{min-height:100vh;background:
+  radial-gradient(1200px 380px at 110% -80px, var(--sky), transparent 60%),
+  radial-gradient(900px 340px at -20% -60px, var(--mint), transparent 60%), var(--bg);background-repeat:no-repeat}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+input{font:inherit;color:inherit}
+.hidden{display:none!important}
+.app{max-width:560px;margin:0 auto;padding:calc(14px + env(safe-area-inset-top)) 16px calc(120px + env(safe-area-inset-bottom));position:relative}
+.sprig{position:absolute;right:6px;top:calc(4px + env(safe-area-inset-top));width:92px;opacity:.9;pointer-events:none}
+header{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin:8px 2px 16px;position:relative;z-index:1}
+.date-nav{display:flex;align-items:center;gap:4px}
+.date-nav button{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;color:var(--sub)}
+.date-nav button:active{background:var(--line)}
+h1{font-size:25px;margin:0;font-weight:700;letter-spacing:-.02em}
+h1 .mark{background:linear-gradient(transparent 60%,var(--hl) 60%);padding:0 3px}
+.dow{color:var(--sub);font-size:14px;margin-top:3px;display:flex;align-items:center;gap:6px}
+.sync{font-size:12px;color:var(--sub);display:flex;align-items:center;gap:6px;white-space:nowrap;padding:6px 10px;border-radius:99px;background:color-mix(in srgb,var(--card) 70%,transparent);backdrop-filter:blur(6px);margin-right:84px}
+.sync i{width:7px;height:7px;border-radius:50%;background:var(--any)}
+.sync.ok i{background:#5cbf7f}.sync.busy i{background:var(--m)}.sync.off i{background:var(--warn)}
+.today-btn{font-size:12px;padding:2px 9px;border:1px solid var(--line);border-radius:99px;color:var(--sub);background:var(--card)}
+
+.hero{display:flex;gap:12px;margin-bottom:20px;align-items:stretch}
+.plant{width:112px;flex:none;background:linear-gradient(180deg,var(--sky),var(--mint));border-radius:20px;display:grid;place-items:end center;padding-top:6px;overflow:hidden}
+.plant svg{width:100%;height:auto;display:block}
+.stats{flex:1;display:flex;flex-direction:column;gap:10px}
+.stat{flex:1;background:var(--card);border-radius:16px;padding:11px 14px;box-shadow:var(--shadow)}
+.stat .top{display:flex;justify-content:space-between;align-items:baseline}
+.stat b{font-size:21px;font-weight:700}.stat span{color:var(--sub);font-size:13px}
+.bar{height:6px;background:var(--bg2);border-radius:9px;margin-top:7px;overflow:hidden}
+.bar>div{height:100%;background:linear-gradient(90deg,var(--leaf2),var(--leaf));border-radius:9px;transition:width .4s}
+.cheer{font-size:13px;color:var(--leaf);margin:-8px 4px 18px;font-weight:500}
+
+section{margin-bottom:22px}
+.sec-h{display:flex;align-items:center;justify-content:space-between;margin:0 4px 8px}
+.sec-h h2{font-size:15px;margin:0;font-weight:600;color:var(--sub);display:flex;align-items:center;gap:6px}
+.sec-h button{font-size:13px;color:var(--leaf);font-weight:600;padding:4px 2px}
+.list{background:var(--card);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}
+.row{display:flex;align-items:center;gap:12px;padding:13px 14px;border-top:1px solid var(--line);min-height:56px}
+.row:first-child{border-top:0}
+.chk{flex:none;width:27px;height:27px;border-radius:50%;border:2px solid var(--any);display:grid;place-items:center;transition:.18s}
+.chk svg{opacity:0;transform:scale(.6);transition:.18s}
+.done .chk{background:var(--leaf);border-color:var(--leaf)}
+.done .chk svg{opacity:1;transform:none}
+.body{flex:1;min-width:0;text-align:left}
+.title{line-height:1.38;word-break:break-word}
+.title span{background:linear-gradient(transparent 56%,var(--hl-soft) 56%) no-repeat 0 0/0% 100%;transition:background-size .35s ease}
+.done .title span{background-size:100% 100%}
+.done .title{color:var(--sub)}
+.meta{font-size:12.5px;color:var(--sub);margin-top:2px;display:flex;gap:8px;flex-wrap:wrap}
+.meta .late{color:var(--warn);font-weight:600}
+.emoji{font-size:20px;width:28px;text-align:center;flex:none}
+.slot-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px;vertical-align:1px}
+.streak{font-size:12.5px;color:var(--sub);flex:none;display:flex;align-items:center;gap:3px}
+.streak b{color:var(--ink)}
+.empty{padding:20px 18px;color:var(--sub);font-size:14px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px}
+.empty svg{width:64px;opacity:.9}
+.week{display:flex;gap:3px;margin-top:6px}
+.week i{width:15px;height:6px;border-radius:3px;background:var(--bg2)}
+.week i.y{background:var(--leaf2)}.week i.off{background:transparent;border:1px dashed var(--line)}
+.fold{width:100%;text-align:left;padding:12px 14px;color:var(--sub);font-size:14px;border-top:1px solid var(--line)}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.cal button{aspect-ratio:1;border-radius:9px;font-size:11px;position:relative}
+
+nav.tabs{position:fixed;left:0;right:0;bottom:0;background:color-mix(in srgb,var(--card) 92%,transparent);backdrop-filter:blur(10px);border-top:1px solid var(--line);display:flex;justify-content:center;padding:6px 0 calc(6px + env(safe-area-inset-bottom));z-index:5}
+nav.tabs .in{display:flex;width:100%;max-width:560px;align-items:center}
+nav.tabs button.t{flex:1;padding:6px 0;font-size:12px;color:var(--sub);display:flex;flex-direction:column;align-items:center;gap:2px}
+nav.tabs button.t.on{color:var(--ink);font-weight:600}
+nav.tabs button.t.on svg{stroke:var(--leaf)}
+.fab{width:54px;height:54px;border-radius:19px;background:linear-gradient(145deg,var(--leaf2),var(--leaf));color:#fff;display:grid;place-items:center;margin:0 6px;flex:none;box-shadow:0 6px 16px rgba(63,138,95,.35)}
+
+.scrim{position:fixed;inset:0;background:rgba(15,25,20,.35);opacity:0;pointer-events:none;transition:.2s;z-index:10}
+.scrim.on{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:0;right:0;bottom:0;margin:0 auto;max-width:560px;background:var(--card);border-radius:24px 24px 0 0;padding:10px 18px calc(20px + env(safe-area-inset-bottom));transform:translateY(105%);transition:transform .26s cubic-bezier(.2,.8,.2,1);z-index:11;max-height:92vh;overflow:auto}
+.sheet.on{transform:none}
+.grab{width:38px;height:4px;border-radius:4px;background:var(--line);margin:0 auto 14px}
+.sheet h3{margin:0 0 14px;font-size:17px}
+.seg{display:flex;background:var(--bg2);border-radius:12px;padding:3px;margin-bottom:14px}
+.seg button{flex:1;padding:8px;border-radius:9px;font-size:14px;color:var(--sub)}
+.seg button.on{background:var(--card);color:var(--ink);font-weight:600;box-shadow:var(--shadow)}
+.field{width:100%;padding:13px 14px;border:1.5px solid var(--line);border-radius:13px;background:var(--bg);outline:none;font-size:16px}
+.field:focus{border-color:var(--leaf2)}
+.lbl{font-size:13px;color:var(--sub);margin:14px 2px 7px}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{padding:7px 13px;border-radius:99px;border:1.5px solid var(--line);font-size:14px;background:var(--card)}
+.chip.on{border-color:var(--leaf);background:var(--leaf);color:#fff}
+.chip.sq{width:40px;padding:7px 0;text-align:center}
+.chip input{border:0;background:none;outline:none;width:130px;color:inherit}
+.emojis{display:flex;flex-wrap:wrap;gap:6px}
+.emojis button{font-size:21px;width:40px;height:40px;border-radius:12px}
+.emojis button.on{background:var(--mint);outline:2px solid var(--leaf2)}
+.actions{display:flex;gap:8px;margin-top:20px}
+.btn{flex:1;padding:14px;border-radius:14px;background:var(--leaf);color:#fff;font-weight:600;text-align:center}
+.btn.ghost{background:var(--bg2);color:var(--ink);flex:none;padding:14px 18px}
+.btn.del{background:none;color:var(--warn);flex:none;padding:14px 10px}
+.confirm{display:none;margin-top:12px;padding:12px;border-radius:12px;background:var(--bg2);font-size:14px;align-items:center;gap:8px}
+.confirm.on{display:flex}.confirm span{flex:1}
+.toast{pointer-events:none;position:fixed;left:50%;top:calc(14px + env(safe-area-inset-top));transform:translateX(-50%) translateY(-20px);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-size:14px;opacity:0;transition:.2s;z-index:20;display:flex;gap:14px;align-items:center;white-space:nowrap}
+.toast.on{opacity:1;transform:translateX(-50%);pointer-events:auto}
+.toast button{color:var(--hl);font-weight:600}
+
+/* 로그인 */
+.login{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px calc(32px + env(safe-area-inset-bottom));text-align:center;max-width:420px;margin:0 auto}
+.login .art{width:180px;margin-bottom:10px}
+.login h2{font-size:26px;margin:6px 0 6px}
+.login p{color:var(--sub);margin:0 0 26px;line-height:1.5;font-size:15px}
+.gbtn{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:14px;border-radius:14px;background:var(--card);box-shadow:var(--shadow);border:1px solid var(--line);font-weight:600}
+.or{color:var(--sub);font-size:13px;margin:18px 0 12px}
+.login form{width:100%;display:flex;flex-direction:column;gap:9px}
+.login .err{color:var(--warn);font-size:13px;min-height:18px;margin-top:6px}
+.linkbtn{color:var(--leaf);font-size:14px;font-weight:600;margin-top:4px}
+.splash{min-height:100vh;display:grid;place-items:center}
+.splash svg{width:90px;animation:bob 1.6s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-6px)}}
+@keyframes grow{from{transform:scaleY(.2);opacity:0}to{transform:none;opacity:1}}
+.grow{transform-origin:50% 100%;animation:grow .6s cubic-bezier(.2,.9,.3,1.2)}
+</style>
+</head>
+<body>
+<div id="splash" class="splash"><svg viewBox="0 0 64 64"><path d="M32 58V30" stroke="#3f8a5f" stroke-width="4" stroke-linecap="round"/><path d="M32 34C32 22 22 16 10 17c0 12 9 19 22 17z" fill="#7cc39a"/><path d="M32 30c0-11 9-17 21-16 0 11-8 18-21 16z" fill="#3f8a5f"/></svg></div>
+
+<div id="login" class="login hidden"></div>
+
+<div id="appView" class="hidden">
+  <div class="app">
+    <svg class="sprig" viewBox="0 0 120 90" aria-hidden="true"><path d="M112 4C88 18 70 40 58 86" fill="none" stroke="var(--leaf2)" stroke-width="2.4" stroke-linecap="round"/><path d="M96 16c-14-4-26 2-30 12 12 5 25 1 30-12z" fill="var(--leaf2)" opacity=".75"/><path d="M84 32c2-13 13-21 26-20-1 13-12 21-26 20z" fill="var(--leaf)" opacity=".55"/><path d="M73 50c-14-2-24 6-26 17 13 3 24-4 26-17z" fill="var(--leaf2)" opacity=".6"/><path d="M66 64c4-12 16-17 28-14-4 12-16 17-28 14z" fill="var(--leaf)" opacity=".4"/><circle cx="40" cy="20" r="3" fill="var(--hl)"/><circle cx="26" cy="36" r="2" fill="var(--leaf2)" opacity=".6"/></svg>
+    <header>
+      <div>
+        <div class="date-nav">
+          <button id="prevDay" aria-label="이전 날"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+          <h1 id="hTitle"></h1>
+          <button id="nextDay" aria-label="다음 날"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg></button>
+        </div>
+        <div class="dow" id="hSub"></div>
+      </div>
+      <button class="sync" id="sync"><i></i><span>연결 중</span></button>
+    </header>
+    <main id="main"></main>
+  </div>
+
+  <nav class="tabs"><div class="in">
+    <button class="t" data-tab="today"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 21v-8"/><path d="M12 13C12 8.5 8.5 6 4 6.5c0 4.5 3.5 7 8 6.5zM12 11c0-4 3-6.5 8-6 0 4-3.2 6.5-8 6z"/></svg>오늘</button>
+    <button class="t" data-tab="todos"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9 6h11M9 12h11M9 18h11"/><path d="M3.5 6l1.2 1.2L6.8 5M3.5 12l1.2 1.2 2.1-2.2M3.5 18l1.2 1.2 2.1-2.2"/></svg>할 일</button>
+    <button class="fab" id="fab" aria-label="추가"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+    <button class="t" data-tab="routines"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M20 12a8 8 0 1 1-2.3-5.6"/><path d="M20 4v4h-4"/><path d="M12 8v4l2.5 2"/></svg>루틴</button>
+    <button class="t" data-tab="stats"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="4.5" width="18" height="16" rx="3"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></svg>기록</button>
+  </div></nav>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<div class="sheet" id="sheet"></div>
+<div class="toast" id="toast"></div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>
